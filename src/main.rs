@@ -5,6 +5,8 @@ use actix_web_httpauth::extractors::bearer::Config;
 use actix_web_httpauth::extractors::AuthenticationError;
 use actix_web_httpauth::middleware::HttpAuthentication;
 
+use actix_web_api_jwt_authentication::auth_extractor::BearerUserAuth;
+
 async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, Error> {
     eprintln!("{:?}", credentials);
     if credentials.token() == "hardcoded" {
@@ -22,7 +24,7 @@ async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<Servi
 }
 
 #[get("/")]
-async fn hello(credentials: BearerAuth) -> impl Responder {
+async fn hello(credentials: BearerUserAuth) -> impl Responder {
     eprintln!("Hello {:?}", credentials);
     HttpResponse::Ok().body("Hello world!")
 }
@@ -43,7 +45,7 @@ async fn main() -> std::io::Result<()> {
         let auth_middleware = HttpAuthentication::bearer(validator);
         App::new()
             .wrap(middleware::Logger::default())
-            .wrap(auth_middleware)
+            //.wrap(auth_middleware)
             .service(hello)
             .service(echo)
             .route("/hey", web::get().to(manual_hello))

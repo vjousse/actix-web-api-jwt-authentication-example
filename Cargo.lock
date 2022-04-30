@@ -173,6 +173,7 @@ dependencies = [
 name = "actix-web-api-jwt-authentication"
 version = "0.1.0"
 dependencies = [
+ "actix-utils",
  "actix-web",
  "actix-web-httpauth",
 ]
